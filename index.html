@@ -1,0 +1,36 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor JSON a CSV</title>
+</head>
+<body>
+    <h1>Conversor JSON a CSV</h1>
+    <textarea id="jsonInput" rows="10" cols="50" placeholder="Pegue aquí el JSON"></textarea><br>
+    <button onclick="convertToJson()">Convertir y descargar CSV</button>
+
+    <script>
+        function convertToJson() {
+            const jsonData = document.getElementById('jsonInput').value;
+            fetch('/convert', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({data: jsonData})
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'data.csv';
+                a.click();
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
